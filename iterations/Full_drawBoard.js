@@ -2,12 +2,9 @@ const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 let frames = 0
 let score = 0
-let interval, timeLeft
-const poos = []
-let counter = 0
-let timeStart = 20
+let interval
+const pipes = []
 
-// Create the game board
 class Board {
   constructor() {
     this.x = 0
@@ -16,7 +13,7 @@ class Board {
     this.height = canvas.height
     this.img = new Image()
     this.img.src =
-      './images/backgrounddetailed1.png'
+      './backgrounddetailed1.png'
     this.img.onload = () => {
       this.draw()
     }
@@ -26,8 +23,7 @@ class Board {
   }
 };
 
-// Create the hero
-class Player {
+class Flappyoso {
   constructor(x, y) {
     this.x = x
     this.y = y
@@ -35,7 +31,7 @@ class Player {
     this.height = 30
     this.img = new Image()
     this.img.src =
-      './images/player1.png'
+      './player1.png'
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
@@ -75,22 +71,29 @@ class Player {
       this.y < obstacle.y + obstacle.height &&
       this.y + this.height > obstacle.y
     )
+    isTouchingBall(obstacle) {
+      return (
+        this.x < obstacle.x  &&
+        this.x + this.width > obstacle.x &&
+        this.y < obstacle.y  &&
+        this.y + this.height > obstacle.y
+      )  
   }
-};
+}
 
-//Create Bosco the Anatagoanisg
 class Bosco {
-  constructor(x, y,vx, vy) {
+  constructor(x, y, r, vx, vy) {
     this.x = x
     this.y = y
-    this.r = 0
+    this.r = r
     this.vx = vx
     this.vy = vy
-    this.width = 20
-    this.height = 20
-    this.img = new Image()
-    this.img.src =
-      './images/boscp.png'
+    this.draw = function() {
+      ctx.fillStyle = 'brown'
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill()
+    }
     this.animate = function(){
         //time to animate our circles ladies and gentlemen.
       if (this.x - this.r + this.vx < board.x || this.x + this.r + this.vx > board.x + board.width) {
@@ -106,18 +109,14 @@ class Bosco {
     } 
   }
   draw() {
+    ctx.fillStyle = 'brown';
     ctx.beginPath();
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fill()
   }
-  // }
-  // draw() {
-  //   ctx.fillStyle = 'brown';
-  //   ctx.beginPath();
-  //   ctx.fillRect(this.x, this.y, 20, 20)
-  // }
 };
 
-//Create the doggie presents
+
 class Poo {
   constructor(x, y) {
     this.x = x
@@ -126,14 +125,13 @@ class Poo {
     this.height = 8
     this.img = new Image()
     this.img.src =
-      './images/poo.png'
+      './poo.png'
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
   }
 };
 
-//Create the endg
 class Grill {
   constructor(x,y) {
     this.x = x
@@ -162,49 +160,62 @@ class Grill {
 // }
 
 const board = new Board()
-const player = new Player(700, 350)
-const bosco = new Bosco(150, 80, 1, 1)
+const flappy = new Flappyoso(700, 350)
+const bosco = new Bosco(150, 80, 1000, 14, 12)
+let poo = new Poo(490, 118)
 const grill = new Grill(20, 20)
 
 
 function drawScore() {
-  if (frames % 20 === 0) {
+  if (frames % 50 === 0) {
     score += 1
- //   poo.draw()
   }
   ctx.font = '24px Courier'
   ctx.fillText(score, canvas.width / 2, 50)
 }
 
-function generatePoo() {
-  if (frames % 500 === 0) {
-  const randomx = Math.floor(Math.random() * board.width)
-  const randomy = Math.floor(Math.random() * board.height)
-  poos.push(new Poo(randomx, randomy))
+// function generatePipes() {
+//   const min = 20
+//   const max = 100
+//   const ventanita = 100
+//   if (frames % 200 === 0) {
+//     const randomHeight = Math.floor(Math.random() * (max - min))
+//     pipes.push(new Pipe(0, 50, randomHeight, true))
 //     pipes.push(new Pipe(randomHeight + ventanita, 50, canvas.height - randomHeight, false))
-  }
-}
+//   }
+// }
 
-function drawPoos() {
-  poos.forEach(poo => {
-    poo.draw()
-  })
-}
+// function drawPipes() {
+//   pipes.forEach(pipe => {
+//     pipe.draw()
+//   })
+// }
 
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   frames++
   board.draw()
-  player.draw()
+  flappy.draw()
   bosco.draw()
   bosco.animate()
   grill.draw()
-  generatePoo()
-  drawPoos()
-  checkCollition()
-  checkWin()
+  poo.draw()
+  poo1.draw()
+  poo2.draw()
+  poo3.draw()
+  poo4.draw()
+  poo5.draw()
+  poo6.draw()
+  poo7.draw()
+  poo8.draw()
+  poo9.draw()
+  poo10.draw()
+  poo11.draw()
+  poo12.draw()
+  // generatePipes()
+  // drawPipes()
+  // checkCollition()
   drawScore()
-  grillTime()
 }
 
 function start() {
@@ -217,24 +228,12 @@ function gameOver() {
   clearInterval(interval)
 }
 
-function gameWon() {
-  ctx.font = '50px Courier'
-  ctx.fillText('Good Work😆', canvas.width / 2 - 100, 200)
-  clearInterval(interval)  
-}
-
-function checkWin() {
-  //   if (player.y > canvas.height - player.height) return gameOver()
-      if (player.isTouching(grill)) return gameWon()
-  }
-
- function checkCollition() {
-//   if (player.y > canvas.height - player.height) return gameOver()
-    if (player.isTouching(bosco)) return gameOver()
-    poos.forEach(poo => {
-    if (player.isTouching(poo)) return gameOver()
-  })
-}
+// function checkCollition() {
+//   if (flappy.y > canvas.height - flappy.height) return gameOver()
+//   pipes.forEach(pipe => {
+//     if (flappy.isTouching(pipe)) return gameOver()
+//   })
+// }
 
 start()
 
@@ -242,16 +241,16 @@ document.onkeydown = event => {
     console.log(event.keyCode)
     switch (event.keyCode) {
         case 38:
-            player.moveUp()
+            flappy.moveUp()
             break
         case 40:
-            player.moveDown()
+            flappy.moveDown()
             break
         case 37:
-            player.moveLeft()
+            flappy.moveLeft()
             break       
         case 39:
-            player.moveRight()
+            flappy.moveRight()
             break
         default:
             ctx.font = '60px Courier'
@@ -259,19 +258,3 @@ document.onkeydown = event => {
             break
     }
 }
-
-function grillTime () {
-  var grillInterval = (setInterval(timeIt, 1000))/60
-  function timeIt() {
-    counter++;
-    if (grillInterval == timeStart) {
-      gameOver()
-    }
-  }
-  var tastyTime = Math.floor(timeStart - grillInterval)+2
-  ctx.font = '24px Courier'
-  ctx.fillText(tastyTime, (canvas.width / 2 + 100), 50)
-
-}
-
-
