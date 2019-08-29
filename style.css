@@ -21,3 +21,7 @@ body button {
 canvas {
   border: 2px solid black;
 }
+
+#bosco {
+  background-color: none;
+}

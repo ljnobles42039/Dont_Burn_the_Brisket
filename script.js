@@ -5,7 +5,9 @@ let score = 0
 let interval, timeLeft
 const poos = []
 let counter = 0
-let timeStart = 20
+let timeStart = 39
+let walk
+let aux = false
 
 // Create the game board
 class Board {
@@ -31,38 +33,38 @@ class Player {
   constructor(x, y) {
     this.x = x
     this.y = y
-    this.width = 30
-    this.height = 30
+    this.width = 50
+    this.height = 100
     this.img = new Image()
     this.img.src =
-      './images/player1.png'
+      './images/player.png'
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
   }
   moveUp(){
-    if (this.y > board.y) {
+    if (this.y - .5*this.height> board.y) {
       this.y -= 20
     } else {
       this.y += 0
     }
   }
   moveDown(){
-    if (this.y + this.height < board.height) {
+    if (this.y + 1.5*this.height < board.height) {
       this.y += 20
     } else {
       this.y += 0
     }    
   }
   moveRight(){
-    if (this.x + this.width < board.width) {
+    if (this.x + 1.5*this.width < board.width) {
       this.x += 20
     } else {
       this.x += 0
     }
   }
   moveLeft(){
-    if (this.x > board.x) {
+    if (this.x > board.x + .5*this.width) {
       this.x -= 20
     } else {
       this.x += 0
@@ -86,11 +88,11 @@ class Bosco {
     this.r = 0
     this.vx = vx
     this.vy = vy
-    this.width = 20
-    this.height = 20
+    this.width = 40
+    this.height = 40
     this.img = new Image()
     this.img.src =
-      './images/boscp.png'
+      './images/french.png'
     this.animate = function(){
         //time to animate our circles ladies and gentlemen.
       if (this.x - this.r + this.vx < board.x || this.x + this.r + this.vx > board.x + board.width) {
@@ -122,11 +124,11 @@ class Poo {
   constructor(x, y) {
     this.x = x
     this.y = y
-    this.width = 8
-    this.height = 8
+    this.width = 12
+    this.height = 12
     this.img = new Image()
     this.img.src =
-      './images/poo.png'
+      './images/poo_t.png'
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
@@ -138,17 +140,29 @@ class Grill {
   constructor(x,y) {
     this.x = x
     this.y = y
-    this.width = 100
-    this.height = 40
-    this.draw = function (){
-      ctx.fillStyle = 'black';
-      ctx.fillRect(this.x, this.y, 100, 40)
+    this.width = 120
+    this.height = 85
+    this.img = new Image()
+    this.img.src =
+      './images/grill.png'
+      this.img.onload = () => {
+        this.draw()
+      }
     }
-  }
-  draw() {
-    ctx.fillStyle = 'black';
-    ctx.fillRect(20, 20, 100, 40)
-  }
+    draw() {
+      ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+    }
+  //   this.draw = function (){
+  //    // ctx.fillStyle = 'black';
+  //     //ctx.fillRect(this.x, this.y, 100, 40)
+  //     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+  //   }
+  // }
+  // draw() {
+  //   //ctx.fillStyle = 'black';
+  //  // ctx.fillRect(20, 20, 100, 40)
+  //  ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+  // }
 };
 //   }
 //   draw() {
@@ -162,9 +176,10 @@ class Grill {
 // }
 
 const board = new Board()
-const player = new Player(700, 350)
-const bosco = new Bosco(150, 80, 1, 1)
+const player = new Player(960, 610)
+const bosco = new Bosco(150, 80, 12, 8)
 const grill = new Grill(20, 20)
+const poo = new Poo(0,0)
 
 
 function drawScore() {
@@ -177,7 +192,7 @@ function drawScore() {
 }
 
 function generatePoo() {
-  if (frames % 500 === 0) {
+  if (frames % 60 === 0) {
   const randomx = Math.floor(Math.random() * board.width)
   const randomy = Math.floor(Math.random() * board.height)
   poos.push(new Poo(randomx, randomy))
@@ -203,8 +218,11 @@ function update() {
   drawPoos()
   checkCollition()
   checkWin()
-  drawScore()
+  //drawScore()
   grillTime()
+  //drunkWalk()
+  //pauseFiveSec()
+  console.log(aux)
 }
 
 function start() {
@@ -213,13 +231,16 @@ function start() {
 
 function gameOver() {
   ctx.font = '50px Courier'
-  ctx.fillText('Really?!?😆', canvas.width / 2 - 100, 200)
+  ctx.fillText('Not Cool Bro!', canvas.width / 2 - 200, 100)
+  ctx.fillText('This is your Brisket!', canvas.width / 2 -225 , 650)
+  ctx.drawImage(poo.img, canvas.width / 2 - 300, canvas.height / 2 - 150, 600, 300) 
   clearInterval(interval)
 }
 
 function gameWon() {
   ctx.font = '50px Courier'
-  ctx.fillText('Good Work😆', canvas.width / 2 - 100, 200)
+  ctx.fillText('Unlike the Brisket, Well Done!!😆', canvas.width / 2 - 550, 200)
+  ctx.drawImage(grill.img, canvas.width / 2 - 300, canvas.height / 2 - 150, 600, 300)
   clearInterval(interval)  
 }
 
@@ -230,15 +251,225 @@ function checkWin() {
 
  function checkCollition() {
 //   if (player.y > canvas.height - player.height) return gameOver()
-    if (player.isTouching(bosco)) return gameOver()
-    poos.forEach(poo => {
-    if (player.isTouching(poo)) return gameOver()
-  })
+    if (player.isTouching(bosco)) pauseFiveSec()
+      poos.forEach((poo,ind) => {
+        if (player.isTouching(poo)) {
+          poos.splice(ind,1)
+          pauseTwoSec()
+        }
+      })  
+}
+
+// //function pauseFiveSec() {
+//   if (aux) {
+//     freezeKeys()  
+//   } else {
+//     keyCommands()
+//   } 
+//   setTimeout(() => {
+//     aux = false  
+//   }, 10000)
+// }
+function pauseFiveSec() {
+  setTimeout(function(){
+    ctx.font = '50px Courier'
+    ctx.fillText('Puppy Time', canvas.width / 2 - 200, 100)
+    freezeKeys5()
+  }, 10); 
+  setTimeout(function(){
+    keyCommands()
+  }, 5010); 
+}
+
+function pauseTwoSec() {
+  setTimeout(function(){
+    ctx.font = '50px Courier'
+    ctx.fillText('Ahhh %$#%$', canvas.width / 2 - 200, 100)  
+    freezeKeys2()
+  }, 10); 
+  setTimeout(function(){
+    keyCommands()
+  }, 2010); 
 }
 
 start()
+keyCommands()
 
+
+
+function keyCommands() { 
 document.onkeydown = event => {
+    switch (event.keyCode) {
+        case 38:
+            player.moveUp()
+            break
+        case 40:
+            player.moveDown()
+            break
+        case 37:
+            player.moveLeft()
+            break       
+        case 39:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
+}
+function freezeKeys5() {
+
+  document.onkeydown = event => {
+    switch (event.keyCode) {
+        case 1:
+            player.moveUp()
+            break
+        case 1:
+            player.moveDown()
+            break
+        case 1:
+            player.moveLeft()
+            break       
+        case 1:
+            player.moveRight()
+            break
+        default:
+            break
+    }
+  }
+}
+
+function freezeKeys2() {
+  ctx.font = '50px Courier'
+  ctx.fillText('Ahhh %$#%$', canvas.width / 2 - 200, 100) 
+  document.onkeydown = event => {
+    switch (event.keyCode) {
+        case 1:
+            player.moveUp()
+            break
+        case 1:
+            player.moveDown()
+            break
+        case 1:
+            player.moveLeft()
+            break       
+        case 1:
+            player.moveRight()
+            break
+        default:
+            break
+    }
+  }
+}
+
+function grillTime () {
+  var grillInterval = (setInterval(timeIt, 1000))/60
+  function timeIt() {
+    counter++;
+
+    if (grillInterval == timeStart) {
+      gameOver()
+    }
+  }
+  var tastyTime = Math.floor(timeStart - grillInterval)+2
+  if(tastyTime % 8 === 0) drunkWalk()
+  if(tastyTime == 0) gameOver()
+
+  ctx.font = '64px Courier'
+  ctx.fillText(tastyTime, canvas.width / 2, 50)
+
+}
+
+
+
+function drunkWalk() {
+
+  walk = Math.floor(Math.random() * 9)
+  console.log(walk)
+  switch (walk) {
+    case 1:
+      drunkenMaster1()
+        break
+    case 2:
+      drunkenMaster2()
+        break
+    case 3:
+      drunkenMaster3()
+        break       
+    case 4:
+      drunkenMaster4()
+        break
+    case 5:
+      drunkenMaster5()
+        break
+    case 6:
+      drunkenMaster6()
+        break
+    case 7:
+      drunkenMaster7()
+        break       
+    case 8:
+      drunkenMaster8()
+        break
+    case 0:
+        //ctx.font = '60px Courier'
+        //ctx.fillText('invalid key', 200, 60)
+        break
+  }
+}
+
+
+function drunkenMaster1() {
+  document.onkeydown = event => {
+    switch (event.keyCode) {
+        case 37:
+            player.moveUp()
+            break
+        case 40:
+            player.moveDown()
+            break
+        case 38:
+            player.moveLeft()
+            break       
+        case 39:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
+}
+
+function drunkenMaster2() {
+  document.onkeydown = event => {
+    console.log(event.keyCode)
+    switch (event.keyCode) {
+        case 37:
+            player.moveUp()
+            break
+        case 39:
+            player.moveDown()
+            break
+        case 38:
+            player.moveLeft()
+            break       
+        case 40:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
+}
+
+function drunkenMaster3() {
+  document.onkeydown = event => {
     console.log(event.keyCode)
     switch (event.keyCode) {
         case 38:
@@ -258,20 +489,127 @@ document.onkeydown = event => {
             ctx.fillText('invalid key', 200, 60)
             break
     }
+  }
 }
 
-function grillTime () {
-  var grillInterval = (setInterval(timeIt, 1000))/60
-  function timeIt() {
-    counter++;
-    if (grillInterval == timeStart) {
-      gameOver()
+function drunkenMaster5() {
+  document.onkeydown = event => {
+    console.log(event.keyCode)
+    switch (event.keyCode) {
+        case 39:
+            player.moveUp()
+            break
+        case 47:
+            player.moveDown()
+            break
+        case 38:
+            player.moveLeft()
+            break       
+        case 40:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
     }
   }
-  var tastyTime = Math.floor(timeStart - grillInterval)+2
-  ctx.font = '24px Courier'
-  ctx.fillText(tastyTime, (canvas.width / 2 + 100), 50)
+}
 
+function drunkenMaster6() {
+  document.onkeydown = event => {
+    console.log(event.keyCode)
+    switch (event.keyCode) {
+        case 39:
+            player.moveUp()
+            break
+        case 40:
+            player.moveDown()
+            break
+        case 38:
+            player.moveLeft()
+            break       
+        case 37:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
+}
+
+function drunkenMaster7() {
+  document.onkeydown = event => {
+    console.log(event.keyCode)
+    switch (event.keyCode) {
+        case 40:
+            player.moveUp()
+            break
+        case 39:
+            player.moveDown()
+            break
+        case 37:
+            player.moveLeft()
+            break       
+        case 38:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
+}
+
+function drunkenMaster8() {
+  document.onkeydown = event => {
+    console.log(event.keyCode)
+    switch (event.keyCode) {
+        case 40:
+            player.moveUp()
+            break
+        case 37:
+            player.moveDown()
+            break
+        case 39:
+            player.moveLeft()
+            break       
+        case 38:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
+}
+
+function drunkenMaster4() {
+  document.onkeydown = event => {
+    console.log(event.keyCode)
+    switch (event.keyCode) {
+        case 38:
+            player.moveUp()
+            break
+        case 40:
+            player.moveDown()
+            break
+        case 37:
+            player.moveLeft()
+            break       
+        case 39:
+            player.moveRight()
+            break
+        default:
+            ctx.font = '60px Courier'
+            ctx.fillText('invalid key', 200, 60)
+            break
+    }
+  }
 }
 
 
