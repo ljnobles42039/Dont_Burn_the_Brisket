@@ -411,8 +411,6 @@ function initialize () {
         drunkenMaster8()
           break
       case 0:
-          //ctx.font = '60px Courier'
-          //ctx.fillText('invalid key', 200, 60)
           break
     }
   }
@@ -434,8 +432,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -458,8 +454,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -482,8 +476,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -506,8 +498,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -530,8 +520,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -554,8 +542,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -578,8 +564,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
@@ -602,8 +586,6 @@ function initialize () {
               player.moveRight()
               break
           default:
-              ctx.font = '60px Courier'
-              ctx.fillText('invalid key', 200, 60)
               break
       }
     }
