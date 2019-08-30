@@ -8,9 +8,23 @@
   <title>Don't Burn the Brisket</title>
 </head>
 <body>
+    <div id="startScreen">
+        <div>
+            <h1>Don't Burn the Brisket</h1>
+        </div>
+        <div>
+    </div>
+    </div>
+
+    <br>
+<button type="button" id="startBtn" onclick="initialize()">Start Game</button>
+    <p>Use arrow keys to navigate Diego <span><img id = "diego" src="./images/diego.png" alt=""></span> to the grill</p>
   <br>
   <div id="game-board"></div>
-  <canvas width = '1200' height = '750'></canvas>
+  <canvas width = '1200' height = '750'>
+  </canvas>
+  <audio src="./sounds/dog.mp3" id = 'dog'></audio>
+  <audio src="./sounds/human.mp3" id = 'human'></audio>
   <script type="text/javascript" src="script.js"></script>
 </body>
 </html>

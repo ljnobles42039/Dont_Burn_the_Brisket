@@ -1,5 +1,7 @@
 body {
   text-align: center;
+  height: 100vh;
+  background: linear-gradient(#333, white) no-repeat;
 }
 
 body h1 {
@@ -24,4 +26,82 @@ canvas {
 
 #bosco {
   background-color: none;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(#333, white) no-repeat;
+}
+
+#startScreen {
+  margin: auto;
+  margin-top: 50px;
+  position: relative;
+  width: 300px;
+  height: 200px;
+  background-color: whitesmoke;
+  color: #333;
+  text-align: center;
+  border: 8px solid;
+  border-radius: 10px;
+  box-shadow: 0 1px 32px white;
+  transform: rotate(0) scale(0);
+  animation: boom 1s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes boom {
+  100% {
+    transform: rotate(1080deg) scale(1);
+  }
+}
+
+#startScreen div {
+  height: 50%;
+}
+
+#startScreen h1 {
+  position:absolute;
+  width: 100%;
+  color: orange;
+  font-size: 40px;
+  text-shadow: 0 1px 2px;
+  animation: pulse 6s linear infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+p {
+  font-weight: bold;
+  font-size: 3em;
+  margin: 15px 0;
+}
+
+#startScreen span {
+  position: relative;
+  font-size: 18px;
+  animation: up 2s linear infinite;
+  animation-delay: 3s;
+}
+
+@keyframes up {
+  25% {
+    top: -4px;
+  }
+}
+
+#gameOn {
+  font-size: 100px;
+  text-align: center;
+  text-shadow: 0 2px 0 limegreen, 0 1px 64px white;
+  animation: pulse 1.5s linear infinite;
+}
+
+#diego {
+  height: 400px;
+  width: auto;
 }
